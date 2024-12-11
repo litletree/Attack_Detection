@@ -36,6 +36,20 @@ SERVICE_ENCODING = {
     'other': 5
 }
 
+# Bản đồ loại tấn công từ mô hình
+ATTACK_MAPPING = {
+    0: "Normal",
+    1: "Fuzzer",
+    2: "Analysis",
+    3: "Backdoor",
+    4: "DoS",
+    5: "Exploits",
+    6: "Generic",
+    7: "Reconnaissance",
+    8: "Shellcode",
+    9: "Worms"
+}
+
 # Hàm chuyển đổi gói tin thành DataFrame
 def packet_to_dataframe(packet):
     try:
@@ -96,7 +110,7 @@ def predict_attack(packet):
     if not data.empty:
         data = data.reindex(columns=MODEL_FEATURES, fill_value=0)
         prediction = model.predict(data)
-        attack_type = "Benign" if prediction[0] == 0 else "Malicious"
+        attack_type = ATTACK_MAPPING.get(prediction[0], "normal")
         update_gui(f"Prediction: {attack_type}")
     else:
         update_gui("Packet data could not be processed.")
